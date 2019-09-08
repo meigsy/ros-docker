@@ -1,0 +1,14 @@
+version: '3'
+
+networks:
+  ros:
+    driver: bridge
+
+services:
+  master:
+    image: ros:melodic-ros-core
+    container_name: master
+    command: stdbuf -o L roscore
+    networks:
+      - ros
+    restart: always
