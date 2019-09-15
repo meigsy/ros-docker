@@ -1,0 +1,57 @@
+version: '3'
+
+# -------------------------------------------------
+# To use run this example start this compose file and
+# attach to the dev service and call client commands
+# $ docker-compose -f service-client-docker-compose.yml up
+# $ docker exec -it dev bash
+# $ rosrun beginner_tutorials add_two_ints_client 123 45235
+# $ docker-compose -f service-client-docker-compose.yml down
+
+services:
+  master:
+    image: ros:melodic-ros-core
+    container_name: master
+    command: roscore
+
+  dev:
+    build: .
+    container_name: dev
+    environment:
+        - "ROS_HOSTNAME=dev"
+        - "ROS_MASTER_URI=http://master:11311"
+    command: tail -f /dev/null
+    volumes:
+        - ./catkin_ws:/root/catkin_ws
+    depends_on:
+        - master
+
+  add-two-ints-server:
+    image: ros:melodic-ros-core
+    container_name: add-two-ints-server
+    environment:
+        - "ROS_HOSTNAME=add-two-ints-server"
+        - "ROS_MASTER_URI=http://master:11311"
+    command: ./root/catkin_ws/src/beginner_tutorials/scripts/start_add_two_ints_server.sh
+    volumes:
+        - ./catkin_ws:/root/catkin_ws
+    depends_on:
+        - master
+
+  add-two-ints-client:
+    image: ros:melodic-ros-core
+    container_name: add-two-ints-client
+    environment:
+        - "ROS_HOSTNAME=add-two-ints-client"
+        - "ROS_MASTER_URI=http://master:11311"
+    command: ./root/catkin_ws/src/beginner_tutorials/scripts/start_add_two_ints_client.sh 42 1
+    volumes:
+        - ./catkin_ws:/root/catkin_ws
+    depends_on:
+        - master
+        - add-two-ints-server
+
+networks:
+  default:
+    external:
+      name: skynet
