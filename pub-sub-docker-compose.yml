@@ -19,24 +19,24 @@ services:
         - master
 
   talker:
-    build: .
+    image: ros:melodic-ros-core
     container_name: talker
     environment:
         - "ROS_MASTER_URI=http://master:11311"
         - "ROS_HOSTNAME=talker"
-    command: ./root/catkin_ws/run_talker.sh
+    command: ./root/catkin_ws/src/beginner_tutorials/scripts/start_talker.sh
     volumes:
         - ./catkin_ws:/root/catkin_ws
     depends_on:
         - master
 
   listener:
-    build: .
+    image: ros:melodic-ros-core
     container_name: listener
     environment:
         - "ROS_MASTER_URI=http://master:11311"
         - "ROS_HOSTNAME=listener"
-    command: ./root/catkin_ws/run_listener.sh
+    command: ./root/catkin_ws/src/beginner_tutorials/scripts/start_listener.sh
     volumes:
         - ./catkin_ws:/root/catkin_ws
     depends_on:

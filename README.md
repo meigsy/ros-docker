@@ -1,5 +1,8 @@
 # ros-docker
 
+## Create network that all compose and bash scripts use
+docker network create skynet
+
 ## start ros master
 docker-compose up
 

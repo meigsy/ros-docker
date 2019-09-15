@@ -1,10 +1,10 @@
 #!/bin/bash
 
 docker run -it --rm \
-  --name dev \
-  --env ROS_HOSTNAME=dev \
+  --name talker \
+  --env ROS_HOSTNAME=talker \
   --env ROS_MASTER_URI=http://master:11311 \
   -v "${PWD}"/catkin_ws:/root/catkin_ws \
   -w /root/catkin_ws \
   --net skynet \
-  ros:melodic-robot
+  ros:melodic-ros-core ./src/beginner_tutorials/scripts/start_talker.sh
