@@ -9,21 +9,14 @@
 # - Start socat: socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 # - Add your IP to the list of hostname/usernames allowed to connect to the x server
 #   - xhost + $IP
-# - Start your gui app:
-
-docker run -d --rm \
-  --name master \
-  --env ROS_HOSTNAME=master \
-  -v "${PWD}"/catkin_ws:/root/catkin_ws \
-  -w /root/catkin_ws \
-  --net skynet \
-  ros:melodic-ros-core roscore
+# - Start a master node
+# - Start your gui app
 
 open -a Xquartz
 socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
 SOCAT_PID=$!
 
-docker run -it --rm \
+docker run -d --rm \
   --name turtlesim_node \
   --env ROS_HOSTNAME=turtlesim_node \
   --env ROS_MASTER_URI=http://master:11311 \
